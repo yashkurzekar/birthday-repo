@@ -128,13 +128,13 @@ export default function ShowtimeCountdown({
   targetDate = DEFAULT_TARGET,
   tickerText = "SAVE THE DATE · OCTOBER 13 ·",
   marqueeTitle = "NOW SHOWING",
-  marqueeSub = "a Pipi production, live October 13th",
-  doorsText = "doors open at midnight, IST",
+  marqueeSub = "The Dysh production, live October 13th",
+  doorsText = "doors open at midnight,12:00 IST",
   songSrc,
   songVolume = 0.6,
   redirectTo,
   children,
-  showPreviewButton = true,
+  showPreviewButton = false,
 }: ShowtimeCountdownProps) {
   const router = useRouter();
 
