@@ -134,7 +134,7 @@ export default function ShowtimeCountdown({
   songVolume = 0.6,
   redirectTo,
   children,
-  showPreviewButton = false,
+  showPreviewButton = true,
 }: ShowtimeCountdownProps) {
   const router = useRouter();
 
@@ -457,11 +457,11 @@ export default function ShowtimeCountdown({
         <div className="grain" />
       </div>
 
-      {showPreviewButton && (
+      {/* {showPreviewButton && (
         <button type="button" className="preview-btn" onClick={triggerUnlock}>
           Preview
         </button>
-      )}
+      )} */}
 
       <div className="lock">
         <div className="curtain-l" ref={curtainLRef} />
