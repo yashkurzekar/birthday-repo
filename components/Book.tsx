@@ -4,14 +4,22 @@ import { useEffect, useRef } from "react";
 import { PageFlip } from "page-flip";
 import Image from "next/image";
 
-
 export default function Book() {
   const bookRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!bookRef.current) return;
+    const source = bookRef.current;
+    if (!source) return;
 
-    const pageFlip = new PageFlip(bookRef.current, {
+    const pageFlipRoot = source.cloneNode(true) as HTMLDivElement;
+    const pages = pageFlipRoot.querySelectorAll<HTMLElement>(".book-page");
+    if (pages.length === 0) return;
+
+    const originalDisplay = source.style.display;
+    source.insertAdjacentElement("afterend", pageFlipRoot);
+    source.style.display = "none";
+
+    const pageFlip = new PageFlip(pageFlipRoot, {
       width: 400,
       height: 500,
       autoSize: false,
@@ -22,11 +30,11 @@ export default function Book() {
       startPage: 0,
     });
 
-    // const pages = bookRef.current.querySelectorAll(".book-page");
-    pageFlip.loadFromHTML(bookRef.current.querySelectorAll(".book-page"));
+    pageFlip.loadFromHTML(pages);
 
     return () => {
       pageFlip.destroy();
+      source.style.display = originalDisplay;
     };
   }, []);
 
@@ -115,7 +123,7 @@ export default function Book() {
         ></Image>
 
         <Image
-          src="/ref/girl.jpg"
+          src="/ref/heart.jpg"
           alt="Front Cover"
           fill
           priority
@@ -178,7 +186,7 @@ export default function Book() {
         ></Image>
 
         <Image
-          src="/ref/girl.jpg"
+          src="/ref/girl1.jpg"
           alt="Front Cover"
           fill
           priority
@@ -187,7 +195,7 @@ export default function Book() {
         ></Image>
 
         <Image
-          src="/ref/girl2.jpg"
+          src="/ref/girl11.jpg"
           alt="Front Cover"
           fill
           priority
@@ -196,7 +204,7 @@ export default function Book() {
         ></Image>
 
         <Image
-          src="/ref/girl3.jpg"
+          src="/ref/girl7.jpg"
           alt="Front Cover"
           fill
           priority
@@ -281,7 +289,7 @@ export default function Book() {
         />
 
         <Image
-          src="/ref/girl4.jpg"
+          src="/ref/girl1.jpg"
           alt="Frame"
           fill
           priority
@@ -389,14 +397,14 @@ export default function Book() {
           className="object-contain scale-32  rotate-0 z-50 translate-x-19 -translate-y-32 "
         />
 
-        {/* <Image
-          src="/ref/girl1.jpg"
+        <Image
+          src="/ref/girl6.jpg"
           alt="Disk"
           fill
           priority
           draggable={false}
           className="object-contain scale-68  rotate-0 z-50 translate-x-18 -translate-y-28 "
-        /> */}
+        />
 
         <Image
           src="/frames/frame5.png"
@@ -468,7 +476,7 @@ export default function Book() {
         />
 
         <Image
-          src="/ref/girl4.jpg"
+          src="/ref/girl7.jpg"
           alt="Disk"
           fill
           priority
@@ -477,7 +485,7 @@ export default function Book() {
         />
 
         <Image
-          src="/ref/girl10.jpg"
+          src="/ref/girl12.jpg"
           alt="Disk"
           fill
           priority
@@ -545,8 +553,7 @@ export default function Book() {
           className="object-contain scale-58  rotate-0 z-50 -translate-x-6 -translate-y-40 "
         />
 
-
-          <Image
+        <Image
           src="/ref/girl9.jpg"
           alt="Disk"
           fill
@@ -554,14 +561,23 @@ export default function Book() {
           draggable={false}
           className="object-contain scale-28  -rotate-4 z-50 -translate-x-18 -translate-y-16 "
         />
-        
-          <Image
-          src="/ref/girl8.jpg"
+
+        <Image
+          src="/ref/heart.jpg"
           alt="Disk"
           fill
           priority
           draggable={false}
           className="object-contain scale-27  rotate-10 z-50 -translate-x-11 translate-y-13 "
+        />
+
+        <Image
+          src="/ref/girl11.jpg"
+          alt="Disk"
+          fill
+          priority
+          draggable={false}
+          className="object-contain scale-26 -rotate-6 z-50 translate-x-4 translate-y-39"
         />
 
         <Image
@@ -592,7 +608,7 @@ export default function Book() {
         {/* <div className="flex h-full items-center justify-center text-5xl font-bold">
           Back Cover
         </div> */}
-          <Image
+        <Image
           // src="/frontr.png"
           src="/pages/back.png"
           alt="Front Cover"

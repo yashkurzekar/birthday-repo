@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ShowtimeCountdown
@@ -44,10 +44,16 @@
  * on the one page that uses it, so its JS/GSAP never ships to any other route.
  */
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-import { useRouter } from 'next/navigation';
-import gsap from 'gsap';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
+import gsap from "gsap";
 
 export interface ShowtimeCountdownProps {
   /** Moment the countdown ends and the curtain opens. */
@@ -90,13 +96,11 @@ interface Remaining {
   seconds: number;
 }
 
-const TARGET = new Date('2026-08-11T00:00:00+05:30').getTime();
-
-async function getRemaining() {
-  const res = await fetch('/api/time', { cache: 'no-store' });
+async function getRemaining(targetDate: Date) {
+  const res = await fetch("/api/time", { cache: "no-store" });
   const { now } = await res.json();
 
-  const diff = TARGET - now;
+  const diff = targetDate.getTime() - now;
 
   if (diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 };
@@ -113,16 +117,19 @@ async function getRemaining() {
   };
 }
 
-/** Default target: Aug 11 2026, 00:00 IST */
-const DEFAULT_TARGET = new Date(Date.UTC(2026, 7, 11, 0, 0, 0) - (5 * 60 + 30) * 60 * 1000);
+/** Default target: Oct 13 2026, 00:00 IST */
+const DEFAULT_TARGET = new Date(
+  Date.UTC(2026, 9, 13, 0, 0, 0) - (5 * 60 + 30) * 60 * 1000,
+);
 
-type UnitKey = 'days' | 'hours' | 'minutes' | 'seconds';
+type UnitKey = "days" | "hours" | "minutes" | "seconds";
 
 export default function ShowtimeCountdown({
-  tickerText = 'SAVE THE DATE · AUGUST 11 ·',
-  marqueeTitle = 'NOW SHOWING',
-  marqueeSub = "a Pipi production, live August 11th",
-  doorsText = 'doors open at midnight, IST',
+  targetDate = DEFAULT_TARGET,
+  tickerText = "SAVE THE DATE · OCTOBER 13 ·",
+  marqueeTitle = "NOW SHOWING",
+  marqueeSub = "a Pipi production, live October 13th",
+  doorsText = "doors open at midnight, IST",
   songSrc,
   songVolume = 0.6,
   redirectTo,
@@ -168,7 +175,9 @@ export default function ShowtimeCountdown({
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    reduceMotionRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    reduceMotionRef.current = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     setIsClient(true);
   }, []);
 
@@ -176,7 +185,7 @@ export default function ShowtimeCountdown({
   useEffect(() => {
     if (revealed) return;
     const original = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = original;
     };
@@ -187,10 +196,10 @@ export default function ShowtimeCountdown({
     if (revealed || !isClient) return;
     const build = (el: HTMLDivElement | null, count: number) => {
       if (!el) return;
-      el.innerHTML = '';
+      el.innerHTML = "";
       for (let i = 0; i < count; i++) {
-        const dot = document.createElement('span');
-        dot.className = 'bulb-dot';
+        const dot = document.createElement("span");
+        dot.className = "bulb-dot";
         el.appendChild(dot);
       }
     };
@@ -202,13 +211,13 @@ export default function ShowtimeCountdown({
   useEffect(() => {
     if (revealed || !isClient || reduceMotionRef.current) return;
 
-    const dots = rootRef.current?.querySelectorAll<HTMLElement>('.bulb-dot');
+    const dots = rootRef.current?.querySelectorAll<HTMLElement>(".bulb-dot");
     const bulbTween = dots
       ? gsap.to(dots, {
           opacity: 1,
           scale: 1.5,
           duration: 0.5,
-          ease: 'power1.inOut',
+          ease: "power1.inOut",
           stagger: { each: 0.045, repeat: -1, yoyo: true },
         })
       : null;
@@ -219,7 +228,7 @@ export default function ShowtimeCountdown({
       gsap.to(flickerRef.current, {
         opacity: () => Math.random() * 0.045,
         duration: () => 0.06 + Math.random() * 0.18,
-        ease: 'power1.inOut',
+        ease: "power1.inOut",
         onComplete: flickerLoop,
       });
     }
@@ -247,10 +256,10 @@ export default function ShowtimeCountdown({
     tryPlay();
 
     // Most browsers require a user gesture before audio can play with sound.
-    window.addEventListener('pointerdown', tryPlay, { once: true });
+    window.addEventListener("pointerdown", tryPlay, { once: true });
 
     return () => {
-      window.removeEventListener('pointerdown', tryPlay);
+      window.removeEventListener("pointerdown", tryPlay);
       audio.pause();
       audio.currentTime = 0;
     };
@@ -258,16 +267,16 @@ export default function ShowtimeCountdown({
 
   /* ---------- odometer digit columns ---------- */
   const buildColumns = useCallback((el: HTMLDivElement, digits: number[]) => {
-    el.innerHTML = '';
+    el.innerHTML = "";
     for (const d of digits) {
       void d;
-      const col = document.createElement('span');
-      col.className = 'od-col';
-      const strip = document.createElement('span');
-      strip.className = 'od-strip';
+      const col = document.createElement("span");
+      col.className = "od-col";
+      const strip = document.createElement("span");
+      strip.className = "od-strip";
       for (let i = 0; i < 10; i++) {
-        const s = document.createElement('span');
-        s.className = 'od-digit';
+        const s = document.createElement("span");
+        s.className = "od-digit";
         s.textContent = String(i);
         strip.appendChild(s);
       }
@@ -276,23 +285,30 @@ export default function ShowtimeCountdown({
     }
   }, []);
 
-  const setDigits = useCallback((el: HTMLDivElement, digits: number[], animate: boolean) => {
-    [...el.children].forEach((col, i) => {
-      const h = (col as HTMLElement).getBoundingClientRect().height;
-      const strip = col.querySelector<HTMLElement>('.od-strip');
-      if (!strip) return;
-      if (animate && !reduceMotionRef.current) {
-        gsap.to(strip, { y: -digits[i] * h, duration: 0.5, ease: 'power3.out' });
-      } else {
-        gsap.set(strip, { y: -digits[i] * h });
-      }
-    });
-  }, []);
+  const setDigits = useCallback(
+    (el: HTMLDivElement, digits: number[], animate: boolean) => {
+      [...el.children].forEach((col, i) => {
+        const h = (col as HTMLElement).getBoundingClientRect().height;
+        const strip = col.querySelector<HTMLElement>(".od-strip");
+        if (!strip) return;
+        if (animate && !reduceMotionRef.current) {
+          gsap.to(strip, {
+            y: -digits[i] * h,
+            duration: 0.5,
+            ease: "power3.out",
+          });
+        } else {
+          gsap.set(strip, { y: -digits[i] * h });
+        }
+      });
+    },
+    [],
+  );
 
   const paintUnit = useCallback(
     (el: HTMLDivElement | null, key: UnitKey, value: string) => {
       if (!el) return;
-      const digits = value.split('').map(Number);
+      const digits = value.split("").map(Number);
       if (!builtRef.current[key]) {
         buildColumns(el, digits);
         builtRef.current[key] = true;
@@ -301,7 +317,7 @@ export default function ShowtimeCountdown({
       }
       setDigits(el, digits, true);
     },
-    [buildColumns, setDigits]
+    [buildColumns, setDigits],
   );
 
   /* ---------- the reveal: curtain opens, then the whole lock screen fades out ---------- */
@@ -316,7 +332,7 @@ export default function ShowtimeCountdown({
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    gsap.killTweensOf(rootRef.current?.querySelectorAll('.bulb-dot') ?? []);
+    gsap.killTweensOf(rootRef.current?.querySelectorAll(".bulb-dot") ?? []);
     if (flickerRef.current) gsap.killTweensOf(flickerRef.current);
 
     const finish = () => {
@@ -336,7 +352,7 @@ export default function ShowtimeCountdown({
           opacity: 0,
           duration: 0.6,
           delay: 0.15,
-          ease: 'power2.out',
+          ease: "power2.out",
           onComplete: () => setRevealed(true),
         });
       });
@@ -353,7 +369,11 @@ export default function ShowtimeCountdown({
     // Fade the lock-screen song out in step with the curtain, so it ends in
     // silence rather than cutting off abruptly.
     if (audioRef.current && !audioRef.current.paused) {
-      gsap.to(audioRef.current, { volume: 0, duration: 1.1, ease: 'power1.in' });
+      gsap.to(audioRef.current, {
+        volume: 0,
+        duration: 1.1,
+        ease: "power1.in",
+      });
     }
 
     // Fully sequential — no overlapping/negative offsets. Overlap is what
@@ -362,22 +382,51 @@ export default function ShowtimeCountdown({
     // label so the parting reads as one clean motion, not layered stutters.
     // Once the curtain has fully finished opening, the whole screen fades.
     const tl = gsap.timeline({ onComplete: finish });
-    tl.to(lockContentRef.current, { opacity: 0, y: -10, duration: 0.35, ease: 'power2.inOut' })
-      .addLabel('open', '+=0.05')
-      .to(curtainL, { xPercent: -100, duration: 1.0, ease: 'power3.inOut', force3D: true }, 'open')
-      .to(curtainR, { xPercent: 100, duration: 1.0, ease: 'power3.inOut', force3D: true }, 'open')
-      .to(chromeRef.current, { opacity: 0, duration: 0.6, ease: 'power2.out' }, 'open');
+    tl.to(lockContentRef.current, {
+      opacity: 0,
+      y: -10,
+      duration: 0.35,
+      ease: "power2.inOut",
+    })
+      .addLabel("open", "+=0.05")
+      .to(
+        curtainL,
+        { xPercent: -100, duration: 1.0, ease: "power3.inOut", force3D: true },
+        "open",
+      )
+      .to(
+        curtainR,
+        { xPercent: 100, duration: 1.0, ease: "power3.inOut", force3D: true },
+        "open",
+      )
+      .to(
+        chromeRef.current,
+        { opacity: 0, duration: 0.6, ease: "power2.out" },
+        "open",
+      );
   }, [redirectTo, router]);
 
   /* ---------- countdown tick (stops entirely the moment unlock triggers) ---------- */
   useEffect(() => {
     if (revealed) return;
     async function paint() {
-      const r = await getRemaining();
-      paintUnit(daysRef.current, 'days', String(Math.min(r.days, 99)).padStart(2, '0'));
-      paintUnit(hoursRef.current, 'hours', String(r.hours).padStart(2, '0'));
-      paintUnit(minutesRef.current, 'minutes', String(r.minutes).padStart(2, '0'));
-      paintUnit(secondsRef.current, 'seconds', String(r.seconds).padStart(2, '0'));
+      const r = await getRemaining(targetDate);
+      paintUnit(
+        daysRef.current,
+        "days",
+        String(Math.min(r.days, 99)).padStart(2, "0"),
+      );
+      paintUnit(hoursRef.current, "hours", String(r.hours).padStart(2, "0"));
+      paintUnit(
+        minutesRef.current,
+        "minutes",
+        String(r.minutes).padStart(2, "0"),
+      );
+      paintUnit(
+        secondsRef.current,
+        "seconds",
+        String(r.seconds).padStart(2, "0"),
+      );
       if (r.total <= 0) triggerUnlock();
     }
     paint();
@@ -388,7 +437,7 @@ export default function ShowtimeCountdown({
         intervalRef.current = null;
       }
     };
-  }, [revealed, paintUnit, triggerUnlock]);
+  }, [revealed, paintUnit, targetDate, triggerUnlock]);
 
   const overlay = (
     <div className="showtime-root " ref={rootRef}>
@@ -409,11 +458,7 @@ export default function ShowtimeCountdown({
       </div>
 
       {showPreviewButton && (
-        <button
-          type="button"
-          className="preview-btn"
-          onClick={triggerUnlock}
-        >
+        <button type="button" className="preview-btn" onClick={triggerUnlock}>
           Preview
         </button>
       )}
@@ -423,10 +468,18 @@ export default function ShowtimeCountdown({
         <div className="curtain-r" ref={curtainRRef} />
 
         <div className="screen">
-          <span className="corner corner-tl" aria-hidden="true">✦</span>
-          <span className="corner corner-tr" aria-hidden="true">✦</span>
-          <span className="corner corner-bl" aria-hidden="true">✦</span>
-          <span className="corner corner-br" aria-hidden="true">✦</span>
+          <span className="corner corner-tl" aria-hidden="true">
+            ✦
+          </span>
+          <span className="corner corner-tr" aria-hidden="true">
+            ✦
+          </span>
+          <span className="corner corner-bl" aria-hidden="true">
+            ✦
+          </span>
+          <span className="corner corner-br" aria-hidden="true">
+            ✦
+          </span>
           <div className="lock-content" ref={lockContentRef}>
             <div className="bulb-rail top" ref={bulbTopRef} />
             <div className="ticker">
@@ -440,9 +493,13 @@ export default function ShowtimeCountdown({
             <div className="bulb-rail bottom" ref={bulbBottomRef} />
 
             <h1 className="marquee-title">
-              <span className="marquee-title-star" aria-hidden="true">✦</span>
+              <span className="marquee-title-star" aria-hidden="true">
+                ✦
+              </span>
               {marqueeTitle}
-              <span className="marquee-title-star" aria-hidden="true">✦</span>
+              <span className="marquee-title-star" aria-hidden="true">
+                ✦
+              </span>
             </h1>
             <p className="marquee-sub">{marqueeSub}</p>
 

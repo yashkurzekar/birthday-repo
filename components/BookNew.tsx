@@ -304,7 +304,7 @@ export default function Book() {
         {/* These 3 photos don't share frame9's transform in the original — independent
             decorative photos, not individually boxed by frame9. Kept as SimplePhoto. */}
         <SimplePhoto
-          src="/ref/girl.jpg"
+          src="/ref/girl1.jpg"
           width={88}
           height={88}
           wrapperClassName="rotate-20 translate-x-19 -translate-y-22"

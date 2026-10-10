@@ -20,6 +20,7 @@ const imgs = [
   { src: "/ref/girl9.jpg" },
   { src: "/ref/girl10.jpg" },
   { src: "/ref/girl11.jpg" },
+  { src: "/ref/girl12.jpg" },
 ];
 
 // const imgs = [
@@ -38,8 +39,6 @@ const imgs = [
 //   { src: "/pipis/pipi13.jpg" },
 //   { src: "/pipis/pipi14.jpg" },
 // ];
-
-
 
 export const HeroSection = () => {
   return (
@@ -60,7 +59,7 @@ export const HeroSection = () => {
 
       {/* Top row: quiet date stamp, nothing else competing for attention */}
       <div className="hero-mono flex items-center justify-between px-8 pt-8 text-[11px] uppercase tracking-[0.25em] text-[#8A8A80] sm:px-14">
-        <span>Aug 5</span>
+        <span>Oct 13</span>
         {/* <span>One more lap</span> */}
       </div>
 
@@ -70,12 +69,14 @@ export const HeroSection = () => {
           <span className="font-light">Happy</span>
           <br />
           <span className="font-bold">Birthday</span>
-          <br/>
-          <span className="font-bold mt-1 text-amber-500">Sweety</span>
+          <br />
+          <span className="font-bold mt-1 text-amber-500">Ladduuu!</span>
         </h1>
         <div className="mt-6 h-px w-16 bg-[#9C7A3F]" />
         <p className="hero-body mt-6 max-w-sm text-base leading-relaxed text-[#4A4A42]">
-       wishing you a day filled with love, laughter, and all the happiness your heart can hold. May this year bring you endless joy and unforgettable memories. Happy Birthday!
+          wishing you a day filled with love, laughter, and all the happiness
+          your heart can hold. May this year bring you endless joy and
+          unforgettable memories. Happy Birthday My ladduuu!
         </p>
       </div>
 
